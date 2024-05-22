@@ -8,6 +8,13 @@ using namespace sf;
 
 using std::string;
 //https://kychka-pc.ru/sfml/urok-6-sfml-rabota-so-vremenem-obyazatelnaya-chast-sfml.html
+
+void keyboard(sf::Event e ) {
+    if (e.KeyPressed) {
+        int a = 0;
+    }
+}
+
 int main()
 {
 
@@ -39,6 +46,9 @@ int main()
         {
             if (event.type == Event::Closed)
                 window.close();
+            if (event.type == sf::Event::KeyPressed) {
+                keyboard(event);
+            }
         }
 
         window.clear(Color::Blue);
