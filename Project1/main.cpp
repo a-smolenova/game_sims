@@ -7,7 +7,7 @@
 using namespace sf;
 
 using std::string;
-
+//https://kychka-pc.ru/sfml/urok-6-sfml-rabota-so-vremenem-obyazatelnaya-chast-sfml.html
 int main()
 {
 
