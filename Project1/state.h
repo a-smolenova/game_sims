@@ -14,7 +14,7 @@ private:
 	sf::Sprite _sprite;
 	sf::Texture _texture;
 public:
-	State(std::string stateName, double duration, int frames_count, std::string spriteSheetPath) : _state_name(stateName), _duration(duration), _count_of_frames(frames_count) { _texture.loadFromFile(spriteSheetPath); _sprite.setTexture(_texture); nextFrame(); _sprite.setPosition(0, 0); };
+	State(std::string stateName, double duration, int frames_count, std::string spriteSheetPath) : _state_name(stateName), _duration(duration), _count_of_frames(frames_count) { _texture.loadFromFile(spriteSheetPath); _sprite.setTexture(_texture); nextFrame(); _sprite.setPosition(0, 0); _sprite.setOrigin(sf::Vector2f(_texture.getSize().x / (2*_count_of_frames), _texture.getSize().y / 2)); };
 
 	std::string getName();
 
