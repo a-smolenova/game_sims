@@ -26,6 +26,6 @@ public:
 	}
 
 	void move(float x, float y) {
-		getSprite().move(x, y);
+		getSprite().setPosition(x, y);
 	}
 };

@@ -21,6 +21,10 @@ public:;
 	void setLastPosition(sf::Vector2i _target) {
 		_last_pos = sf::Vector2f(_target.x, _target.y);
 	}
+	
+	void setLastPosition(sf::Vector2f _target) {
+		_last_pos = _target;
+	}
 	void update(sf::Vector2i& _target) {
 		//cam.move();
 		sf::Vector2f deltaP(_last_pos.x - _target.x, _last_pos.y - _target.y);
@@ -28,6 +32,9 @@ public:;
 			cam.move(deltaP * 10.0f*((abs(20+_zoom+1))/121.0f));
 		std::cout << 5.0f * ((abs(20 + _zoom) + 1) / 121.0f) << "\n";
 		_last_pos = sf::Vector2f(_target.x, _target.y);
+	}
+	void update() {
+		cam.setCenter(_last_pos);
 	}
 
 	void updateZoom(int number) {

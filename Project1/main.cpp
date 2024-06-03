@@ -56,6 +56,8 @@ int main()
     float timer_to_test_anim = 0;
 
     
+    sf::View def_view = window.getView();
+
     Vector2i mousePixelPos = Mouse::getPosition(window);//забираем коорд курсора
     
     player.move(100, 100);
@@ -71,11 +73,12 @@ int main()
         //update mouse position
         mousePixelPos = Mouse::getPosition(window);
         mousePos = window.mapPixelToCoords(mousePixelPos);
-       // std::cout << mousePos.x << " - " << mousePos.y << "\n";
+       // 
         if (timer_to_test_anim >= 100) {
             timer_to_test_anim = 0;
             player._animator.update();
-            player.move(0,1);
+            player.move(0,player.y + 10);
+            player.y += 10;
             player1._animator.update();
         }
         Event event;
@@ -96,7 +99,7 @@ int main()
             }
             if (event.type == sf::Event::MouseButtonReleased)
             {
-                camera.setLastPosition(mousePixelPos);
+                camera.setLastPosition(mousePos);
                 _pressed = false;
             }
             if (event.type == sf::Event::MouseWheelMoved)
@@ -106,16 +109,20 @@ int main()
             }
         }
 
-        window.setView(camera.getView());
+        
 
         window.clear(Color::Blue);
-
+        //window.setView(def_view);
         player._animator.draw();
         player1._animator.draw();
+        std::cout << window.mapPixelToCoords(Mouse::getPosition(window)).x << " - " << window.mapPixelToCoords(Mouse::getPosition(window)).y << "\n";
+        window.setView(camera.getView());
         //drawAll();
-        if(_pressed)
+        std::cout << mousePos.x << " - " << mousePos.y << "\n";
+        if (_pressed)
             camera.update(mousePixelPos);
-
+        else
+            camera.update();
         window.display();
     }
     return 0;
