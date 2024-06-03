@@ -1,5 +1,7 @@
 #pragma once
 #include"state.h"
+#include <SFML/Graphics/RenderWindow.hpp>
+
 
 class Animator {
 private:
@@ -26,6 +28,6 @@ public:
 	}
 
 	void move(float x, float y) {
-		getSprite().setPosition(x, y);
+		getSprite().move(x, y);
 	}
 };

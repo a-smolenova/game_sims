@@ -29,8 +29,8 @@ public:;
 		//cam.move();
 		sf::Vector2f deltaP(_last_pos.x - _target.x, _last_pos.y - _target.y);
 		//if(abs(deltaP.x) + abs(deltaP.y) >= 5)
-			cam.move(deltaP * 10.0f*((abs(20+_zoom+1))/121.0f));
-		std::cout << 5.0f * ((abs(20 + _zoom) + 1) / 121.0f) << "\n";
+			cam.move(deltaP * 1.5f*(cam.getSize().x/800));
+
 		_last_pos = sf::Vector2f(_target.x, _target.y);
 	}
 	void update() {

@@ -2,6 +2,8 @@
 
 #include"entity.h"
 #include"camera.h"
+#include"map.h"
+#include"sim.h"
 
 #include<string>
 #include<iostream>
@@ -16,7 +18,11 @@ using std::string;
 RenderWindow window(VideoMode(800, 800), L"Новый проект", Style::Default);
 Vector2f mousePos = window.mapPixelToCoords(Mouse::getPosition(window));
 
+std::vector<Sim> all_sim;
+
 Camera camera;
+
+Map my_map("Map/start.txt", window);
 
 
 void keyboard(sf::Event e ) {
@@ -25,16 +31,18 @@ void keyboard(sf::Event e ) {
     }
 }
 
-void drawAll(std::vector<Entity>& objects) {
-    for (int i = 0; i < objects.size(); ++i) {
+
+
+void drawAllSim() {
+    for (int i = 0; i < all_sim.size(); ++i) {
         
-        objects[i]._animator.draw();
+        all_sim[i]._animator.draw();
     }
 }
 
-void updateSprites(std::vector<Entity>& objects) {
-    for (int i = 0; i < objects.size(); ++i) {
-        objects[i]._animator.update();
+void updateAllSimSprites() {
+    for (int i = 0; i < all_sim.size(); ++i) {
+        all_sim[i]._animator.update();
     }
 }
 
@@ -44,14 +52,18 @@ int main()
 
     window.setVerticalSyncEnabled(true);
 
-    State test("front", 400, 4, "./Animation/front.png");
-    State test1("back", 400, 4, "./Animation/back.png");
+    State front("front", 400, 4, "./Animation/front.png");
+    State back("back", 400, 4, "./Animation/back.png");
 
+    State right("right", 400, 4, "./Animation/right.png");
+    State left("right", 400, 4, "./Animation/left.png");
 
-    Entity player(1,0,window);
-    Entity player1(1,0, window);
-    player._animator.addState(test);
-    player1._animator.addState(test1);
+    all_sim.push_back(Sim(0, 0, window));
+    all_sim.push_back(Sim(0, 0, window));
+
+    all_sim[0]._animator.addState(front);
+    all_sim[1]._animator.addState(back);
+
 
     float timer_to_test_anim = 0;
 
@@ -60,8 +72,8 @@ int main()
 
     Vector2i mousePixelPos = Mouse::getPosition(window);//забираем коорд курсора
     
-    player.move(100, 100);
-    player1.move(0, 100);
+    all_sim[0].move(100, -100);
+    all_sim[1].move(0, 100);
     bool _pressed = false;
     while (window.isOpen())
     {
@@ -73,13 +85,11 @@ int main()
         //update mouse position
         mousePixelPos = Mouse::getPosition(window);
         mousePos = window.mapPixelToCoords(mousePixelPos);
-       // 
+       // обновить кадр анимаций
         if (timer_to_test_anim >= 100) {
             timer_to_test_anim = 0;
-            player._animator.update();
-            player.move(0,player.y + 10);
-            player.y += 10;
-            player1._animator.update();
+            updateAllSimSprites();
+            all_sim[0].move(0, 10);
         }
         Event event;
         while (window.pollEvent(event))
@@ -92,33 +102,30 @@ int main()
 
             if (event.type == sf::Event::MouseButtonPressed)
             {
-                std::cout << 1;
                 camera.setLastPosition(mousePixelPos);
                 _pressed = true;
 
             }
             if (event.type == sf::Event::MouseButtonReleased)
             {
-                camera.setLastPosition(mousePos);
+                camera.setLastPosition( Vector2f(mousePos.x - mousePixelPos.x * camera.getView().getSize().x / 800 + camera.getView().getSize().x/2, int(mousePos.y) - mousePixelPos.y * camera.getView().getSize().x / 800 + camera.getView().getSize().y/2));
                 _pressed = false;
             }
             if (event.type == sf::Event::MouseWheelMoved)
             {
-                std::cout << event.mouseWheel.delta << '\n';
                 camera.updateZoom(event.mouseWheel.delta);
             }
         }
 
-        
+        //std::cout << int(mousePos.x) % 800 + 400 << " - " << int(mousePos.y) % 800 + 400 << "\n";
+
+        std::cout << mousePixelPos.x*camera.getView().getSize().x/800 << " - " << mousePixelPos.y * camera.getView().getSize().x / 800 << "\n";
 
         window.clear(Color::Blue);
-        //window.setView(def_view);
-        player._animator.draw();
-        player1._animator.draw();
-        std::cout << window.mapPixelToCoords(Mouse::getPosition(window)).x << " - " << window.mapPixelToCoords(Mouse::getPosition(window)).y << "\n";
+        my_map.draw_map();
+        drawAllSim();
         window.setView(camera.getView());
-        //drawAll();
-        std::cout << mousePos.x << " - " << mousePos.y << "\n";
+
         if (_pressed)
             camera.update(mousePixelPos);
         else
