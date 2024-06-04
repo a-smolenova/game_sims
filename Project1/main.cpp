@@ -31,7 +31,21 @@ void keyboard(sf::Event e ) {
     }
 }
 
-
+void updateAllSimPosition() {
+    for (int i = 0; i < all_sim.size(); ++i) {
+        if ( !my_map.isColide(all_sim[i].x - (1 - 2*int(all_sim[i].getState() == 3)) * 10 * int(all_sim[i].getState() == 2 || all_sim[i].getState() == 3),
+            all_sim[i].y - (1 - 2 * int(all_sim[i].getState() == 0)) * 10 * int(all_sim[i].getState() == 0 || all_sim[i].getState() == 1), 
+            all_sim[i]._animator.getSprite().getTextureRect().getSize())) 
+        {
+            std::cout << -(1 - 2 * int(all_sim[i].getState() == 0)) * 10 * int(all_sim[i].getState() == 0 || all_sim[i].getState() == 1);
+            //std::cout << -(1 - 2 * int(all_sim[i].getState() == 3)) * 10 * int(all_sim[i].getState() == 2 || all_sim[i].getState() == 3);
+            all_sim[i].move();
+        }
+        else {
+            all_sim[i].nextState();
+        }
+    }
+}
 
 void drawAllSim() {
     for (int i = 0; i < all_sim.size(); ++i) {
@@ -62,7 +76,13 @@ int main()
     all_sim.push_back(Sim(0, 0, window));
 
     all_sim[0]._animator.addState(front);
+    all_sim[0]._animator.addState(back);
+    all_sim[0]._animator.addState(right);
+    all_sim[0]._animator.addState(left);
+    all_sim[1]._animator.addState(front);
     all_sim[1]._animator.addState(back);
+    all_sim[1]._animator.addState(right);
+    all_sim[1]._animator.addState(left);
 
 
     float timer_to_test_anim = 0;
@@ -72,8 +92,11 @@ int main()
 
     Vector2i mousePixelPos = Mouse::getPosition(window);//забираем коорд курсора
     
-    all_sim[0].move(100, -100);
-    all_sim[1].move(0, 100);
+    //all_sim[0].move(550, 550);
+    // //all_sim[1].move(550, 550);
+    all_sim[0].move(360,360);
+    all_sim[1].move(720, 720);
+    
     bool _pressed = false;
     while (window.isOpen())
     {
@@ -89,7 +112,8 @@ int main()
         if (timer_to_test_anim >= 100) {
             timer_to_test_anim = 0;
             updateAllSimSprites();
-            all_sim[0].move(0, 10);
+            updateAllSimPosition();
+           // all_sim[0].move(0, 10);
         }
         Event event;
         while (window.pollEvent(event))
@@ -119,7 +143,7 @@ int main()
 
         //std::cout << int(mousePos.x) % 800 + 400 << " - " << int(mousePos.y) % 800 + 400 << "\n";
 
-        std::cout << mousePixelPos.x*camera.getView().getSize().x/800 << " - " << mousePixelPos.y * camera.getView().getSize().x / 800 << "\n";
+        //std::cout << mousePixelPos.x*camera.getView().getSize().x/800 << " - " << mousePixelPos.y * camera.getView().getSize().x / 800 << "\n";
 
         window.clear(Color::Blue);
         my_map.draw_map();

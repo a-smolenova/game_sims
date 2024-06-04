@@ -16,6 +16,13 @@ void State::nextFrame()
 	_sprite.setTextureRect(sf::IntRect((_texture_lnk.getSize().x / _count_of_frames)*_curent_frame, 0, _texture_lnk.getSize().x/ _count_of_frames, _texture_lnk.getSize().y));
 }
 
+void State::setFrame(int f)
+{
+	_curent_frame = 0;
+	_sprite.setTextureRect(sf::IntRect((_texture_lnk.getSize().x / _count_of_frames) * _curent_frame, 0, _texture_lnk.getSize().x / _count_of_frames, _texture_lnk.getSize().y));
+
+}
+
 sf::Sprite& State::getSprite()
 {
 	return _sprite;

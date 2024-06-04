@@ -27,7 +27,15 @@ public:
 		return _all_states[_current_state].getSprite();
 	}
 
+	void changeState(int to) {
+		if (to != _current_state) {
+			_all_states[_current_state].setFrame(0);
+			_current_state = to;
+		}
+
+	}
+
 	void move(float x, float y) {
-		getSprite().move(x, y);
+		getSprite().setPosition(x,y);
 	}
 };
