@@ -2,7 +2,7 @@
 #include<vector>
 #include<fstream>
 #include"block.h"
-
+#include<queue>
 
 class Map {
 private:
@@ -73,6 +73,60 @@ public:
 			}
 		}
 		return false;
+	}
+
+	std::vector<sf::Vector2f> pathSearch(int _x, int _y, int _to_x, int _to_y) {
+
+		std::queue<sf::Vector2i> q;
+
+		sf::Vector2i p_h(-1,1);
+		std::vector<std::vector<sf::Vector2i>> path(_map.size(), std::vector<sf::Vector2i>(_map[0].size(), sf::Vector2i(-1,-1)));
+		std::vector<std::vector<bool>> used(_map.size(), std::vector<bool>(_map[0].size(), false));
+		q.push(sf::Vector2i(_x/360,_y/360));
+
+		while (!q.empty()) {
+			sf::Vector2i v = q.front();
+			q.pop();
+			if (v.y + 1 < _map.size() && !_map[v.y + 1][v.x].isCollide() && used[v.y + 1][v.x] == false) {
+				path[v.y + 1][v.x] = v;
+				used[v.y + 1][v.x] = true;
+				q.push(sf::Vector2i(v.x, v.y+1));
+			}
+			if (v.y - 1 > 0 && !_map[v.y - 1][v.x].isCollide() && used[v.y - 1][v.x] == false) {
+				path[v.y - 1][v.x] = v;
+				used[v.y - 1][v.x] = true;
+				q.push(sf::Vector2i(v.x , v.y- 1));
+
+			}
+			if (v.x + 1 < _map.size() && !_map[v.y][v.x+1].isCollide() && used[v.y][v.x + 1] == false) {
+				path[v.y][v.x + 1] = v;
+				used[v.y][v.x + 1]  = true;
+				q.push(sf::Vector2i(v.x+1, v.y));
+
+			}
+			if (v.x - 1 > 0 && !_map[v.y][v.x - 1].isCollide() && used[v.y][v.x - 1] == false) {
+				path[v.y][v.x - 1] = v;
+				used[v.y][v.x - 1] = true;
+				q.push(sf::Vector2i(v.x-1, v.y));
+
+			}
+		}
+
+		// если пути не существует, возвращаем пустой vector
+		if (used[_to_y/360][_to_x/360] == false) {
+			return {};
+		}
+
+		std::vector<sf::Vector2f> res_path;
+		sf::Vector2i t(_to_x/360, _to_y/360);
+		while (t.x != _x/360 || t.y != _y/360) {
+			res_path.push_back(sf::Vector2f(t.x*360, t.y*360));
+			t = path[t.y][t.x];
+		}
+
+		// путь был рассмотрен в обратном порядке, поэтому его нужно перевернуть
+		reverse(res_path.begin(), res_path.end());
+		return res_path;
 	}
 
 };

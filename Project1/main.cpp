@@ -27,20 +27,38 @@ Map my_map_l1("Map/start.txt", window);
 
 void keyboard(sf::Event e ) {
     if (e.KeyPressed) {
-        int a = 0;
+        if (e.key.code == Keyboard::A) {
+            all_sim[0].setTarget(Vector2f(3 * 360, 2 * 360), 'f');
+            all_sim[0].changeSimState(_state::Hungry);
+        }
+        if (e.key.code == Keyboard::B) {
+            all_sim[1].setTarget(Vector2f(3 * 360, 2 * 360), 'f');
+            all_sim[1].changeSimState(_state::Hungry);
+        }
     }
 }
 
 void updateAllSimPosition() {
     for (int i = 0; i < all_sim.size(); ++i) {
-        if ( !my_map_l1.isColide(all_sim[i].x - (1 - 2*int(all_sim[i].getState() == 3)) * 10 * int(all_sim[i].getState() == 2 || all_sim[i].getState() == 3),
-            all_sim[i].y - (1 - 2 * int(all_sim[i].getState() == 0)) * 10 * int(all_sim[i].getState() == 0 || all_sim[i].getState() == 1), 
-            all_sim[i]._animator.getSprite().getTextureRect().getSize())) 
-        {
+        if (all_sim[i].getState() == _state::Hungry) {
+            if (!all_sim[i].hasTarget()) {
+                all_sim[i].setPath(my_map_l1.pathSearch(all_sim[i].x + 360 * int(all_sim[i].getAnimState() == 2), all_sim[i].y + 360 * int(all_sim[i].getAnimState() == 0),
+                    all_sim[i].getTargetPos().x, all_sim[i].getTargetPos().y));
+            }
             all_sim[i].move();
         }
         else {
-            all_sim[i].nextState();
+
+
+            if (!my_map_l1.isColide(all_sim[i].x - (1 - 2 * int(all_sim[i].getAnimState() == 3)) * 10 * int(all_sim[i].getAnimState() == 2 || all_sim[i].getAnimState() == 3),
+                all_sim[i].y - (1 - 2 * int(all_sim[i].getAnimState() == 0)) * 10 * int(all_sim[i].getAnimState() == 0 || all_sim[i].getAnimState() == 1),
+                all_sim[i]._animator.getSprite().getTextureRect().getSize()))
+            {
+                all_sim[i].move();
+            }
+            else {
+                all_sim[i].nextState();
+            }
         }
     }
 }
@@ -61,7 +79,6 @@ void updateAllSimSprites() {
 int main()
 {
     Clock clock;
-
     window.setVerticalSyncEnabled(true);
 
     State front("front", 400, 4, "./Animation/front.png");
