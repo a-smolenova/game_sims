@@ -10,6 +10,7 @@ enum class _state_anim: int {f = 0, b = 1, r = 2, l = 3};
 class Sim: public Entity {
 private:
 	_state_anim c_s = _state_anim::f;
+	_state state = _state::WalkAround;
 	int _speed = 10;
 public:
 	Animator _animator;
@@ -21,25 +22,20 @@ public:
 		Entity::x += x;
 		Entity::y += y;
 		if (y < 0 && _state_anim::b != c_s) {
-			_animator.changeState(static_cast<int>(_state_anim::b));
+			_animator.changeAnimState(static_cast<int>(_state_anim::b));
 			 c_s = _state_anim::b;
 		}
 		else if (y > 0 && _state_anim::f != c_s) {
-			_animator.changeState(static_cast<int>(_state_anim::f));
+			_animator.changeAnimState(static_cast<int>(_state_anim::f));
 			c_s = _state_anim::f;
-
 		}
 		else if (x < 0 && _state_anim::r != c_s) {
-			_animator.changeState(static_cast<int>(_state_anim::r));
+			_animator.changeAnimState(static_cast<int>(_state_anim::r));
 			c_s = _state_anim::r;
-
-
 		}
 		else if (x > 0 && _state_anim::l != c_s) {
-			_animator.changeState(static_cast<int>(_state_anim::l));
+			_animator.changeAnimState(static_cast<int>(_state_anim::l));
 			c_s = _state_anim::l;
-
-
 		}
 		_animator.move(Entity::x, Entity::y);
 	}
@@ -48,28 +44,28 @@ public:
 
 		if (_state_anim::b == c_s) {
 			Entity::y -= _speed * _count;
-			_animator.changeState(static_cast<int>(_state_anim::b));
+			_animator.changeAnimState(static_cast<int>(_state_anim::b));
 
 		}
 		else if (_state_anim::f == c_s) {
 			Entity::y += _speed * _count;
-			_animator.changeState(static_cast<int>(_state_anim::f));
+			_animator.changeAnimState(static_cast<int>(_state_anim::f));
 
 		}
 		else if (_state_anim::r == c_s) {
 			Entity::x -= _speed * _count;
-			_animator.changeState(static_cast<int>(_state_anim::r));
+			_animator.changeAnimState(static_cast<int>(_state_anim::r));
 
 		}
 		else if ( _state_anim::l == c_s) {
 			Entity::x += _speed * _count;
-			_animator.changeState(static_cast<int>(_state_anim::l));
+			_animator.changeAnimState(static_cast<int>(_state_anim::l));
 
 		}
 		_animator.move(Entity::x, Entity::y);
 	}
 
-	void changeState(_state_anim n_state) {
+	void changeAnimState(_state_anim n_state) {
 		c_s = n_state;
 	}
 

@@ -22,7 +22,7 @@ std::vector<Sim> all_sim;
 
 Camera camera;
 
-Map my_map("Map/start.txt", window);
+Map my_map_l1("Map/start.txt", window);
 
 
 void keyboard(sf::Event e ) {
@@ -33,12 +33,10 @@ void keyboard(sf::Event e ) {
 
 void updateAllSimPosition() {
     for (int i = 0; i < all_sim.size(); ++i) {
-        if ( !my_map.isColide(all_sim[i].x - (1 - 2*int(all_sim[i].getState() == 3)) * 10 * int(all_sim[i].getState() == 2 || all_sim[i].getState() == 3),
+        if ( !my_map_l1.isColide(all_sim[i].x - (1 - 2*int(all_sim[i].getState() == 3)) * 10 * int(all_sim[i].getState() == 2 || all_sim[i].getState() == 3),
             all_sim[i].y - (1 - 2 * int(all_sim[i].getState() == 0)) * 10 * int(all_sim[i].getState() == 0 || all_sim[i].getState() == 1), 
             all_sim[i]._animator.getSprite().getTextureRect().getSize())) 
         {
-            std::cout << -(1 - 2 * int(all_sim[i].getState() == 0)) * 10 * int(all_sim[i].getState() == 0 || all_sim[i].getState() == 1);
-            //std::cout << -(1 - 2 * int(all_sim[i].getState() == 3)) * 10 * int(all_sim[i].getState() == 2 || all_sim[i].getState() == 3);
             all_sim[i].move();
         }
         else {
@@ -141,12 +139,8 @@ int main()
             }
         }
 
-        //std::cout << int(mousePos.x) % 800 + 400 << " - " << int(mousePos.y) % 800 + 400 << "\n";
-
-        //std::cout << mousePixelPos.x*camera.getView().getSize().x/800 << " - " << mousePixelPos.y * camera.getView().getSize().x / 800 << "\n";
-
         window.clear(Color::Blue);
-        my_map.draw_map();
+        my_map_l1.draw_map();
         drawAllSim();
         window.setView(camera.getView());
 
