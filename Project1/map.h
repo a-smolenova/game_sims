@@ -8,13 +8,15 @@ class Map {
 private:
 	std::vector<std::vector<Block>> _map;
 	sf::Texture _texture;
+	sf::Texture _texture_fridge;
 public:
 	Map(std::string _map_name, sf::RenderWindow& rw)
 	{
 		_texture.loadFromFile("Sprites/floor.png");
+		_texture_fridge.loadFromFile("Sprites/fridge.png");
 		std::ifstream file;
 		file.open(_map_name);
-		int i = 0;
+		int i = 0;	
 		int j = 0;
 		_map.push_back(std::vector<Block>());
 		while (file.is_open() && !file.eof()) {
@@ -36,6 +38,16 @@ public:
 				_map[i][j].x = j * 360;
 				_map[i][j].y = i * 360;
 				_map[i][j]._animator.move(j * 360, i * 360);
+				++j;
+			}
+			else if (in_char == 'F') {
+				_map[i].push_back(Block(0, 0, rw));
+				_map[i][j]._animator.addState(State("idle", 0, 1, _texture_fridge));
+				_map[i][j].setCollide(false);
+				_map[i][j].x = j * 360;
+				_map[i][j].y = i * 360;
+				_map[i][j]._animator.move(j * 360, i * 360);
+
 				++j;
 			}
 			else if (in_char == ' ') {

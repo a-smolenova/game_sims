@@ -28,6 +28,7 @@ Map my_map_l1("Map/start.txt", window);
 void keyboard(sf::Event e ) {
     if (e.KeyPressed) {
         if (e.key.code == Keyboard::A) {
+            //360 - длинна и высота одногоквадрата
             all_sim[0].setTarget(Vector2f(3 * 360, 2 * 360), 'f');
             all_sim[0].changeSimState(_state::Hungry);
         }
@@ -37,9 +38,10 @@ void keyboard(sf::Event e ) {
         }
     }
 }
-
+//двигает человечков
 void updateAllSimPosition() {
     for (int i = 0; i < all_sim.size(); ++i) {
+        //ведёт по пути к заданной точке
         if (all_sim[i].getState() == _state::Hungry) {
             if (!all_sim[i].hasTarget()) {
                 all_sim[i].setPath(my_map_l1.pathSearch(all_sim[i].x + 360 * int(all_sim[i].getAnimState() == 2), all_sim[i].y + 360 * int(all_sim[i].getAnimState() == 0),
@@ -48,7 +50,7 @@ void updateAllSimPosition() {
             all_sim[i].move();
         }
         else {
-
+            //случайно ходит
 
             if (!my_map_l1.isColide(all_sim[i].x - (1 - 2 * int(all_sim[i].getAnimState() == 3)) * 10 * int(all_sim[i].getAnimState() == 2 || all_sim[i].getAnimState() == 3),
                 all_sim[i].y - (1 - 2 * int(all_sim[i].getAnimState() == 0)) * 10 * int(all_sim[i].getAnimState() == 0 || all_sim[i].getAnimState() == 1),
@@ -62,7 +64,7 @@ void updateAllSimPosition() {
         }
     }
 }
-
+//отрисовка человечков
 void drawAllSim() {
     for (int i = 0; i < all_sim.size(); ++i) {
         
@@ -70,6 +72,7 @@ void drawAllSim() {
     }
 }
 
+//смена кадра
 void updateAllSimSprites() {
     for (int i = 0; i < all_sim.size(); ++i) {
         all_sim[i]._animator.update();
@@ -130,6 +133,7 @@ int main()
             updateAllSimPosition();
            // all_sim[0].move(0, 10);
         }
+        //проверка взаимодействия игрока с игрой
         Event event;
         while (window.pollEvent(event))
         {
